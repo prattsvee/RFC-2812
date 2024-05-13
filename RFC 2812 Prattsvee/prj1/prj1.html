@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Project  1</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script type="text/javascript"
+          src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js">
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css">
+    <link href="../../assets/styles/article.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body class=umt-article>
+    <nav id="course-nav">
+      <ul>
+      </ul>
+    </nav>
+
+    <div class="umt-content">
+      <div><section data-level="h1"><h1>Project  1</h1><p><strong>Due</strong>: Feb 13, before midnight.
+</p><p><strong>Important Reminder</strong>: As per the course
+
+<a href="../../misc/academic-honesty/academic-honesty-policy.html">Academic Honesty Policy</a>, cheating of any kind will minimally
+result in your letter grade for the entire course being reduced by one
+level.
+</p><p>This document first provides the aims of this project.  It then lists
+the requirements as explicitly as possible.  It then hints at how
+these requirements can be met.  Finally, it describes how it can be
+submitted.
+</p><section data-level="h2"><h2>Aims</h2><p>The aims of this project are as follows:
+</p><ul><li><p>To encourage you to use regular expressions to implement a trivial
+    scanner.
+</p></li><li><p>To make you implement a recursive-descent parser for a
+    small language.
+</p></li><li><p>To use  <a href="https://www.json.org/json-en.html">JSON</a> to represent
+    the results of parsing.
+</p></li></ul></section><section data-level="h2"><h2> <span id="require">Requirements</span></h2><p>Use the implementation of either <code>java</code>, <code>node</code> or <code>python3</code> available
+on <code>remote.cs</code> to implement a parser for the following language of
+which is a subset of the syntax used for 
+<a href="https://elixir-lang.org/">elixir</a> data literals. (You may also use a language like TypeScript
+which compiles to one of these languages as long as you provide all
+the steps needed to compile that language to one of the above
+languages).
+</p><ul><li><p>A sentence in the language consists of a sequence of
+    zero-or-more <strong>data-literal</strong>'s.
+</p></li><li><p>A <strong>data-literal</strong> is either a <strong>list</strong> literal, a <strong>tuple</strong> literal,
+    a <strong>map</strong> literal, or a <strong>primitive</strong> literal.
+</p></li><li><p>A <strong>primitive</strong> literal is either an <strong>integer</strong>, <strong>atom</strong> or <strong>boolean</strong>.
+</p></li><li><p>A <strong>list</strong> literal is a sequence of 0-or-more comma-separated
+    <strong>data-literal</strong>'s within square brackets <code>[</code> and <code>]</code>.
+</p></li><li><p>A <strong>tuple</strong> literal is a sequence of 0-or-more comma-separated
+    <strong>data-literal</strong>'s within braces <code>{</code> and <code>}</code>.
+</p></li><li><p>A <strong>map</strong> literal is a sequence of 0-or-more comma-separated
+    <strong>key-pair</strong>'s within a decorated left brace <code>%{</code> and a regular right
+    brace <code>}</code>.
+</p></li><li><p>A <strong>key-pair</strong> is either a sequence consisting of a <strong>data-literal</strong>,
+    a right-arrow <code>=></code> followed by a <strong>data-literal</strong>, or a sequence
+    consisting of a <strong>key</strong> followed by a <strong>data-literal</strong>.
+</p></li><li><p>An <strong>integer</strong> consists of a sequence of one-or-more digits, possibly
+    containing <strong>internal</strong> underscores <code>_</code>.
+</p></li><li><p>An <strong>atom</strong> consists of a colon <code>:</code>, followed by an alphabetic
+    character or underscore <code>_</code> followed by a sequence of zero-or-more
+    alphanumeric characters or underscores <code>_</code>.
+</p></li><li><p>A <strong>key</strong> is just like an atom but the <code>:</code> must be at the end
+    instead of the start.
+</p></li><li><p>A <strong>boolean</strong> is one of the words <code>true</code> or <code>false</code>.
+</p></li></ul><p>Whitespace and <code>#</code>-to-end-of-line comments should be ignored.
+</p><p>Note that a map literal of the form <code>%{ key: 22 }</code> is syntactic sugar
+for <code>%{ :key => 22 }</code>.
+</p><p>You will specifically need to submit a
+ <a href="https://linux.die.net/man/1/zip">zip</a>-archive which unpacks into a
+<code>prj1-sol</code> directory minimally containing a file <code>elixir-data.ebnf</code>
+plus two shell scripts <code>make.sh</code> and <code>run.sh</code>:
+</p><ol><li><p><code>elixir-data.ebnf</code> must contain a grammar for the above language
+    using the EBNF notation described in class.
+</p></li><li><p>Running <code>make.sh</code> from any directory should build any artifacts
+    needed to run your program within the <code>prj1-sol</code> directory.
+</p></li><li><p>Running <code>run.sh</code> from any directory should read and parse a
+    sentence of the above language from standard input and output
+    on standard output a single line containing the JSON
+    representation of the parse.
+</p><p>    Different kinds of data literals should be output as a JSON
+    object having two properties:
+</p><dl><dt> <code>%k</code> </dt><dd><p>        The kind of the literal, as defined below.
+</p></dd><dt> <code>%v</code> </dt><dd><p>        The value of the literal, as defined below.
+</p></dd></dl><p>     The top-level JSON should consist of a JSON list containing
+     the JSON representations of the top-level <strong>data-literal</strong>'s read
+     from standard input.
+</p><p>     The JSON representation of the different kind of literals
+     should be as follows:
+</p><ul><li><p>An <strong>integer</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;int&quot;,
+        &quot;%v&quot;:</code> <em>value</em> <code>}</code> where <em>value</em> is a JSON integer
+        respresenting the value of the integer.  For example, the
+        <strong>integer</strong> <code>123</code> should have the JSON representation <code class="hljs language-javascript">{ &quot;%k&quot;:
+        &quot;int&quot;, &quot;%v&quot;: 123 }</code>.
+</p></li><li><p>An <strong>atom</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;:</code>
+        <em>value</em> <code>}</code> where <em>value</em> is a JSON string spelling out the
+        atom.  For example, the <strong>atom</strong> <code>:_a32</code> should have the JSON
+        representation <code class="hljs language-javascript">{ &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;: &quot;:_a32&quot; }</code>.
+</p></li><li><p>A <strong>boolean</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;bool&quot;,
+        &quot;%v&quot;:</code> <em>value</em> <code>}</code> where <em>value</em> is a JSON boolean
+        representing the value of the <strong>boolean</strong>.  For example, the
+        boolean <code>true</code> should have the JSON representation <code class="hljs language-javascript">{ &quot;%k&quot;:
+        &quot;bool&quot;, &quot;%v&quot;: true }</code>.
+</p></li><li><p>A <strong>key</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;:</code>
+        <em>value</em> <code>}</code> where <em>value</em> is a JSON string spelling out the
+        key lexeme, but with the <code>:</code> moved to the front.  For example,
+        the <strong>key</strong> <code>abc:</code> should have the JSON representation <code class="hljs language-javascript">{ &quot;%k&quot;:
+        &quot;atom&quot;, &quot;%v&quot;: &quot;:abc&quot; }</code>.
+</p></li><li><p>A <strong>list</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;list&quot;, &quot;%v&quot;:</code>
+        <em>value</em> <code>}</code> where <em>value</em> is a JSON list containing the JSON
+        representations of the individual items in the <strong>list</strong>.  For
+        example, the list <code>[ 1, 2 ]</code> should have the JSON
+        representation:
+</p><pre class="hljs language-json">	{ &quot;%k&quot;: &quot;list&quot;,
+	  &quot;%v&quot;: [
+	     { &quot;%k&quot;: &quot;int&quot;, &quot;%v&quot;: 1 },
+	     { &quot;%k&quot;: &quot;int&quot;, &quot;%v&quot;: 2 }
+	  ]
+	}
+</pre></li><li><p>A <strong>tuple</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;tuple&quot;, &quot;%v&quot;:</code>
+        <em>value</em> <code>}</code> where <em>value</em> is a JSON list containing the JSON
+        representations of the individual items in the <strong>tuple</strong>.  For
+        example, the tuple <code>{ 1, :k }</code> should have the JSON
+        representation:
+</p><pre class="hljs language-json">	{ &quot;%k&quot;: &quot;tuple&quot;,
+	  &quot;%v&quot;: [
+	     { &quot;%k&quot;: &quot;int&quot;, &quot;%v&quot;: 1 },
+	     { &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;: &quot;:k&quot; }
+	  ]
+	}
+</pre></li><li><p>A <strong>map</strong> has the JSON representation <code>{ &quot;%k&quot;: &quot;map&quot;, &quot;%v&quot;:</code>
+        <em>value</em> <code>}</code> where <em>value</em> is a JSON list containing the
+        2-element JSON lists representing the individual elements in
+        the <strong>map</strong>.  For example, the map <code>%{ :a => 22, b: 33 }</code> should
+        have the JSON representation:
+</p><pre class="hljs language-json">	{ &quot;%k&quot;: &quot;map&quot;,
+	  &quot;%v&quot;: [
+	     [ { &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;: &quot;:a&quot; },
+	       { &quot;%k&quot;: &quot;int&quot;, &quot;%v&quot;: 22 }
+	     ],
+	     [ { &quot;%k&quot;: &quot;atom&quot;, &quot;%v&quot;: &quot;:b&quot; },
+	       { &quot;%k&quot;: &quot;int&quot;, &quot;%v&quot;: 33 }
+	     ]
+	  ]
+	}
+</pre></li></ul></li></ol><p>The JSON output should consist of a single line without any whitespace
+other than the newline terminator.  The members of a JSON object may
+be output in any order.
+</p><p>If there are errors in the content, the program should exit with a
+non-zero status after detecting the first syntax error.  It should
+output a suitable error message on standard error.
+</p><p>An annotated  <a href="extras/LOG?lang=sh">log</a> of the running project and the
+ <a href="extras/tests">provided tests</a> should help clarify the above
+requirements.
+</p></section><section data-level="h2"><h2>Rationale for the Requirements</h2><p>The requirements are based on the following rationale:
+</p><ul><li><p>The specified language is a simple language containing a subset of
+    Elixir data literals.  Implementing a parser for
+    this language allows you to understand the basic principles of
+    scanning and recursive-descent parsing. 
+</p></li><li><p>The <code>make.sh</code> and <code>run.sh</code> scripts allow automatic testing of your
+    project without needing to know the details of your implementation
+    language.  The former allows the testing program to run any compilation
+    step required by your implementation language and the latter
+    allows the testing program to run the project.
+</p></li></ul></section><section data-level="h2"><h2>Provided Files</h2><p>The  <a href="./prj1-sol">prj1-sol</a> directory contains starter shell scripts
+for the two scripts your submission is required to contain as well as
+a template README which you must complete and include with your
+submission.
+</p><p>The  <a href="./extras">extras</a> directory contains auxiliary files associated
+with the project, including files which can help with testing your
+project.
+</p><dl><dt>  <a href="extras/tests">tests</a> </dt><dd><p>    A directory containing tests.  There are three kinds of test files:
+</p><dl><dt> <code>*.test</code> </dt><dd><p>      A test input for which your program is expected to succeed.
+</p></dd><dt> <code>*.out</code> </dt><dd><p>      The expected pretty-printed output for a successful test of
+      the corresponding <code>*.test</code> file.
+</p></dd><dt> <code>*.err</code> </dt><dd><p>      A test input for which your program should fail.
+</p></dd></dl></dd><dt>  <a href="extras/do-tests.sh?lang=sh">do-tests.sh</a> </dt><dd><p>    A shell script which can be used for running the above tests.
+    It can be invoked from any directory and takes up to two arguments:
+</p><ol><li><p>The path to your <code>run.sh</code> shell script.  
+</p></li><li><p>An optional argument giving the path to a single test
+         to be run.
+</p></li></ol><p>    If invoked with only a single argument, the script will run
+    all tests.  If invoked with a second argument, then it will
+    run only the test specified by that argument.
+</p></dd><dt>  <a href="extras/LOG?lang=sh">LOG</a> </dt><dd><p>    A log file illustrating the operation of the project.
+</p></dd></dl></section><section data-level="h2"><h2>Standard Input, Standard Output, Standard Error</h2><p>This project requires your program to read from standard input and
+write its output to standard output and write error messages to
+standard error.  These are the three I/O streams which are initially
+available when a program starts up under any current OS:
+</p><dl><dt> <strong>Standard Input</strong> </dt><dd><p>    An input stream, initially set up to read from the console.
+    This often corresponds to file descriptor 0.
+</p></dd><dt> <strong>Standard Output</strong> </dt><dd><p>    An output stream, initially set up to output to the console.
+    This often corresponds to file descriptor 1.
+</p></dd><dt> <strong>Standard Error</strong> </dt><dd><p>    Another output stream, initially set up to output to the console.
+    This often corresponds to file descriptor 2.
+</p></dd></dl><p>So you can use these streams without needing to open any file, as they
+are already open.
+</p><p>All popular languages provide access to these streams.
+</p><section data-level="h3"><h3>Python</h3><ul><li><p><code>sys.stdin</code>, <code>sys.stdout</code> and <code>sys.stderr</code> refer to the
+      three streams.
+</p></li><li><p><code>sys.stdin.read()</code> will read from standard input until EOF.
+</p></li><li><p><code>print(...)</code> or <code>sys.stdout.write(...)</code> will print <code>...</code> to
+      standard output (the former adds a newline). 
+</p></li><li><p><code>sys.stderr.write(...)</code> or <code>print(..., file=sys.stderr)</code> will
+      write <code>...</code> to standard error.
+</p></li></ul></section><section data-level="h3"><h3>JavaScript nodejs</h3><ul><li><p><code>0</code>, <code>1</code> and <code>2</code> refer to the three streams and can be used
+      wherever a file path is expected. 
+</p></li><li><p><code>fs.readFileSync(0, 'utf8')</code> will read from standard input until EOF.
+</p></li><li><p><code>console.log(...)</code> or <code>fs.writeFileSync(1, ...)</code> will write <code>...</code>
+      to standard output (the former adds a newline and has additional
+      functionality).
+</p></li><li><p><code>console.error(...)</code> or <code>fs.writeFileSync(2, ...)</code> will write
+       <code>...</code> to standard error (the former adds a newline and has
+       additional functionality).
+</p></li></ul></section><section data-level="h3"><h3>Java</h3><p>    Java defines <code>System.in</code>, <code>System.out</code> and <code>System.err</code> for the
+    three streams; you can then use the smorgasbord of <code>java.io.*</code>
+    classes to read/write the streams.  The newer <code>java.nio.file</code>
+    package provides more convenient APIs.
+</p></section><section data-level="h3"><h3>Using stdin within the Unix Shell</h3><p>If a program is reading interactively from standard input, then it
+will freeze and wait for input to be provided on the terminal:
+</p><pre class="hljs language-sh">$ ./run.sh
+%{a: 22 }
+^D   #indicate EOF
+[{&quot;%k&quot;:&quot;map&quot;,&quot;%v&quot;:[[{&quot;%k&quot;:&quot;atom&quot;,&quot;%v&quot;:&quot;:a&quot;},{&quot;%k&quot;:&quot;int&quot;,&quot;%v&quot;:22}]]}]
+$ 
+</pre><p>The control-D is used to indicate EOF to the terminal controller.
+</p><p>It is much more convenient to use  I/O redirection in the shell:
+</p><pre>$ ./run.sh \
+     &lt; ~/cs571/projects/prj1/extras/tests/50-compound-data.test \
+   | jq - S . > compound-data.json
+</pre><p>The <code>\</code> escapes newlines to combine multiple physical lines into a
+single logical line; the <code>&lt; .../tests/50-compound-data.test</code> redirects
+the contents of <code>50-compound-data.test</code> to the standard input of
+<code>run.sh</code>; the <code>| jq -S .</code> pipes the single line output of the program
+to <code>jq -S .</code> which pretty-prints the json on its standard output (<code>-S</code>
+sorts all object keys); finally, the <code>> compound-data.json</code> redirects
+the standard output of <code>jq</code> to <code>compound-data.json</code>.
+</p><p>Note that <code>run.sh</code> is totally unaware of the redirection; the shell
+takes care of setting up the standard input and output streams so that
+they are redirected to the files.  For example, if <code>run.sh</code> is
+calling a python parser, then the python parser can continue using
+<code>sys.stdin</code> and <code>sys.stdout</code>.
+</p></section></section><section data-level="h2"><h2> <span id="startup">Before</span> Starting Your Project</h2><p>Before starting this project, set up a symlink to the course
+repository under your home directory on <code>remote.cs</code>:
+</p><pre class="hljs language-sh">$ cd ~                    #ensure you are in your home directory
+$ ln -s ~umrigar/cs571 .  #set up symlink
+$ ls cs571                #list files
+</pre><p>You should see the top-level files and directories in the course repository.
+</p><p>Note that the above symlink will always reflect the current contents of
+the course repository.
+</p><p>It is also probably a good idea to set up a work directory on <code>remote.cs</code>.
+</p><pre class="hljs language-sh">$ mkdir -p ~/i571/submit
+</pre><p>Then use the <code>~/i571</code> directory for any personal work for the course and
+the <code>~/i571/submit</code> directory for work to be submitted.  For example, you
+might do the work for this project in <code>~/i571/submit/prj1-sol</code>.
+</p><p>If you are familiar with git, it is probably a good idea to create a
+git respository for your <code>~/i571</code> directory.
+</p></section><section data-level="h2"><h2>Hints</h2><p>This section is not prescriptive in that you may choose to ignore
+it as long as you meet all the project requirements.
+</p><p>The following points are worth noting:
+</p><ul><li><p>Ideally, the implementation language for your project should
+    support the following:
+</p><ul><li><p>Support regex's either in the language or via standard
+        libraries.
+</p></li><li><p>Easy support for JSON, ideally via standard libraries.
+</p></li></ul><p>    Scripting languages like Python or JavaScript
+    will probably make the development easiest.  
+</p></li><li><p>The requirements forbid extraneous whitespace in the JSON output
+    which makes the output quite hard to read.  To get around this,
+    you can pipe the output through a JSON pretty-printer like
+    <code>jq -S .</code> which is available on <code>remote.cs</code>. 
+</p></li><li><p>While developing the project, you will probably be running
+    tests provided in the  <a href="extras">extras</a> directory.  It may
+    be convenient to set up a shortcut shell variable in the
+    shell you are using for developing your project.
+</p><pre class="hljs language-sh">    $ extras=$HOME/cs571/projects/prj1/extras
+    # run a particular test
+    $ $extras/do-tests.sh ./run.sh $extras/tests/12-single-int.test
+    # run all tests
+    $ $extras/do-tests.sh ./run.sh
+</pre></li><li><p>The exit status of the last shell command is available in the
+    shell variable <code>$?</code>.  You can examine it using the command
+    <code>echo $?</code>.  This can be used to verify that your program
+    exits with a non-zero status when given erroneous inputs.
+</p></li><li><p>Note that calling <code>consume()</code> changes the lookahead token.  So if
+    you need the lexeme for a token, it should be grabbed from the
+    lookahead before <code>consume()</code>ing that token.
+</p></li></ul><p>You may proceed as follows:
+</p><ol><li><p>Review the material covered in class on regex's, scanners,
+    grammars and recursive-descent parsing.  Specifically:
+</p><ol><li><p>Review the
+        
+        <a href="../../slides/lang-specification/code/arith/index.html">online parser</a> to make sure you understand the gist of how
+        
+        <a href="../../slides/lang-specification/code/arith/arith.mjs?lang=js">arith.mjs</a> works without getting bogged down in the details of
+        JavaScript.
+</p></li><li><p>Review specific 
+         <a href="../../slides/lang-specification/code/arith-to-json/">arithmetic expression to JSON parsers</a> implemented in different
+	 programming languages.
+</p></li></ol></li><li><p>Read the project requirements thoroughly.
+</p></li><li><p>Ensure that you have set up your <code>remote.cs</code> account for 
+    as specified in the  <a href="#startup">Before Starting Your Project</a>
+    section.
+</p></li><li><p>Copy over the starting code for your project (this assumes you
+    have created a <code>~/i571/submit</code> directory):
+</p><pre class="hljs language-sh">    $ cd ~/i571/submit
+    $ cp -r ~/cs571/projects/prj1/prj1-sol .
+    $ cd prj1-sol
+    $ ls  # list starting files
+</pre></li><li><p>If using git, set up a 
+    <a href="https://git-scm.com/docs/gitignore">.gitignore</a> file suitable to your implementation language.  Set
+    it up to ensure that you do not commit binaries or cached files to
+    git.  Note that the project allows you to set up the <code>make.sh</code>
+    script to have the TA build those files when grading your project.
+</p></li><li><p>Fill in your details in the <code>README</code> template.  Commit and push
+    your changes if using git.
+</p></li><li><p>Write an EBNF grammar for the data literals language.  You should
+    be able to do so by structuring your grammar based on the
+    description of the language provided in the 
+    <a href="#require">Requirements</a> section.
+</p><p>    Once you are happy with the grammar, paste it in as a comment
+    in one of your implementation files.  Use the grammar to drive
+    your code as per the recipes discussed in class.
+</p></li><li><p>Start work on your lexer.  It is easiest to simply read the entire
+    standard input into a string variable.
+</p><p>    You need to decide whether your lexer will accumulate all tokens
+    into a list, or deliver them one-by-one as needed by the parser.
+</p><ul><li><p>The former organization facilitates using unlimited lookahead
+        in the parser; i.e. the parser can look ahead by several tokens
+	in order to make parsing decisions.
+</p></li><li><p>The latter organization will require having the lexer track
+        its position within the input text.
+</p></li></ul><p>    As mentioned in class, minimally a token should have the following
+    fields:
+</p><dl><dt> <code>kind</code> </dt><dd><p>specifying the kind of token.
+</p></dd><dt> <code>lexeme</code> </dt><dd><p>specifying the matched text.
+</p></dd></dl><p>    Additionally, you may want to track the position of the token within
+    the input stream to facilitate error reporting.
+</p><p>    Depending on the implementation language used for your project,
+    making the <code>kind</code> field a string equal to the <code>lexeme</code> field for
+    all tokens having only one possible lexeme will make your parser more
+    self-documenting. 
+</p><p>    To produce the next token, the scanner can work as follows:
+</p><ol><li><p>Ignore whitespace and <code>#</code>-to-end-of-line comments, if any.
+        Note that there could be a sequence of alternating
+	whitespace and <code>#</code>-comments.
+</p></li><li><p>Check whether the prefix of the text after the whitespace/comments
+        matches a possible multiple character token.  If yes, accumulate
+	that token.
+</p></li><li><p>Otherwise return the first character in the text as a single
+        character token.  This works particularly well if these tokens
+        have the token <code>kind</code> set to the <code>lexeme</code>.  This will allow
+        any illegal characters to be delivered to the parser which has
+        better context to report errors.
+</p></li></ol></li><li><p>Use the techniques discussed in class to write a recursive descent
+    parser for your constructed grammar.  Note that the recipe
+    provided for writing recursive descent parsers requires
+    maintaining a &quot;global<code></code>&quot; variable <code>tok</code> which contains the
+    current lookahead token and a <code>consume(kind)</code> function which sets
+    <code>tok</code> to the next token if its <code>kind</code> matches the parameter, and
+    reports an error if that is not the case.
+</p><p>    [If using python3 as your implementation language, you will need
+     to declare any &quot;global<code></code>&quot;  variable <code>nonlocal</code> in order to
+     refer to it from within your parsing functions.]
+</p><p>    Most of the provided grammar can be handled easily using the recipe
+    provided for recursive descent parsers.
+</p><ul><li><p>A utility predicate which checks if the current lookahead
+        token can start a data literal may be useful.
+</p></li><li><p>Your parser should attempt a non-terminal only if
+        the current lookahead token can start that non-terminal,
+	or if that non-terminal is the only remaining possibility.
+</p></li><li><p>When a parsing function returns successfully, ensure that
+        the <code>tok</code> lookahead contains the token immediately after
+	the tokens recognized by that function.
+</p></li><li><p>One advantage of hand-written recursive descent parsers is
+        that it is possible to use arguments and return values of
+        parsing functions.  Specifically, have each parsing function
+        return a value representing the phrase parsed by that
+        function.  Ensure that the return value can easily be
+	converted to the required JSON output.
+</p></li></ul></li><li><p>Convert the value returned by your parser to a JSON string without
+    any whitespace and output to standard output followed by a
+    newline.
+</p></li><li><p>Test your parser using the provided scanner tests:
+</p><pre class="hljs language-sh">    $ ~/cs571/projects/prj1/extras/do-tests.sh run.sh
+</pre><p>    Debug any failing tests.  Note that you can run a single test by
+    adding an additional argument to the above command providing the
+    path to the failing test.
+</p></li><li><p>Iterate until you meet all requirements.
+</p></li></ol><p>If using git, it is always a good idea to keep committing your
+project periodically to ensure that you do not accidentally lose work.
+</p></section><section data-level="h2"><h2>Submission</h2><p>You are required to submit a  <a href="https://linux.die.net/man/1/zip">zip</a>-archive
+such that unpacking that archive will result in at least the three following
+files
+</p><pre>prj1-sol/elixir-data.ebnf
+prj1-sol/make.sh
+prj1-sol/run.sh
+</pre><p>The unpacked <code>prj1-sol</code> directory should contain all other source
+files needed to build and run your project.  Note that it must not
+contain files like <code>*.class</code> files which are built by <code>make.sh</code>.
+</p><p><strong>Important Note</strong>: Unfortunately, gradescope removes execute
+permissions when unpacking the zip archive.  So you cannot set up your
+<code>run.sh</code> script to run interpeter files directly.  So for example, a
+<code>run.sh</code> which contains the line <code>$dir/elixir-literal.mjs</code> will not
+work, you will need to use <code>node $dir/elixir-literal.mjs</code>.  Similarly,
+for Python use <code>python3 $dir/elixir-literal.py</code> instead of
+<code>$dir/elixir-literal.py</code>.
+</p><p>Further details needed for submission will be made available next week.
+</p></section><section data-level="h2"><h2>References</h2><ul><li><p>
+    <a href="https://en.wikipedia.org/wiki/Recursive_descent_parser#Example_parser">Example Parser</a>  <span id="refs">from</span> Wikipedia article on <em>Recursive
+    descent parser</em>.  Note that the grammar notation is slightly
+    different:
+</p><ul><li><p><code>{</code> X <code>}</code> is used to indicate 0-or-more repetitions of X instead of
+        <code>X*</code>.
+</p></li><li><p><code>[ X ]</code> is used to indicate an optional <code>X</code> instead of <code>X?</code>.
+</p></li></ul><p>    The parser uses <code>accept()</code> and <code>expect()</code> instead of our <code>peek()</code>
+    and <code>consume()</code>.  The semantics of the routines are slightly
+    different: they get the next token in <code>accept()</code>, whereas we get
+    the next token in <code>consume()</code>.
+</p></li><li><p>
+    <a href="https://www.cs.cornell.edu/courses/cs2112/2015fa/lectures/lec_parsing/">Grammars and Parsing</a>, discusses building ASTs.  The <code>peek()</code> and
+    <code>consume()</code> routines described there are exactly equivalent to our
+    <code>peek()</code> and <code>consume()</code> routines.
+</p></li></ul></section></section></div>
+    </div>
+
+    <script type="module" src="../../assets/scripts/slide-controls.mjs"></script>
+    <script type="module" src="../../assets/scripts/nav.mjs"></script> 
+    <script type="module" src="../../assets/scripts/highlight.mjs"></script>
+</body>
+</html>
+

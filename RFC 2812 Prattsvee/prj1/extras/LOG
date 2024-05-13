@@ -1,0 +1,99 @@
+# empty input
+$ echo '     ' | ./run.sh
+[]
+
+# empty input with comments; typed ^D to indicate EOF
+$ ./run.sh
+
+# here is a comment
+# and another comment
+[]
+
+# show actual output without whitespace
+$ echo '%{a: 22, [33] => 44, c: {55, :d, []}}' | ./run.sh
+[{"%k":"map","%v":[[{"%k":"atom","%v":":a"},{"%k":"int","%v":22}],[{"%k":"list","%v":[{"%k":"int","%v":33}]},{"%k":"int","%v":44}],[{"%k":"atom","%v":":c"},{"%k":"tuple","%v":[{"%k":"int","%v":55},{"%k":"atom","%v":":d"},{"%k":"list","%v":[]}]}]]}]
+
+# use jq . to pretty-print output.
+$ echo '%{a: 22, [33] => 44, c: {55, :d, []}}' | ./run.sh | jq .
+[
+  {
+    "%k": "map",
+    "%v": [
+      [
+        {
+          "%k": "atom",
+          "%v": ":a"
+        },
+        {
+          "%k": "int",
+          "%v": 22
+        }
+      ],
+      [
+        {
+          "%k": "list",
+          "%v": [
+            {
+              "%k": "int",
+              "%v": 33
+            }
+          ]
+        },
+        {
+          "%k": "int",
+          "%v": 44
+        }
+      ],
+      [
+        {
+          "%k": "atom",
+          "%v": ":c"
+        },
+        {
+          "%k": "tuple",
+          "%v": [
+            {
+              "%k": "int",
+              "%v": 55
+            },
+            {
+              "%k": "atom",
+              "%v": ":d"
+            },
+            {
+              "%k": "list",
+              "%v": []
+            }
+          ]
+        }
+      ]
+    ]
+  }
+]
+
+# show termination status of 0 (indicating success)
+$ echo $?
+0
+
+# incorrect closing delim
+$ echo '{]' | ./run.sh
+error: expecting '}' but got ']'
+{]
+ ^
+
+# show termination status of non-0 (indicating failure)
+$ echo $?
+1
+
+# incorrect map key
+$ echo '%{ a => 33 }' | ./run.sh
+error: expecting '}' but got 'a'
+%{ a => 33 }
+   ^
+
+# extra comma, note poor error message
+$ echo '[22,]' | ./run.sh
+error: expecting 'BOOL' but got ']'
+[22,]
+    ^
+    

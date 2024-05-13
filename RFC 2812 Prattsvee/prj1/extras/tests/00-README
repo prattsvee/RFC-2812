@@ -1,0 +1,12 @@
+This directory contains three kinds of files:
+
+  : *.test :
+    A file containing a test which is expected to succeed.
+
+  : *.out :
+    A file containing pretty-printed JSON output for the corresponding
+    `*.test` file.
+
+  : *.err :
+    A file containing a test which is expected to fail.
+    
